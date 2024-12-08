@@ -4,11 +4,11 @@ import br.com.giovanni.springsecurity.tweet.controller.dto.CreateTweerDto;
 import br.com.giovanni.springsecurity.tweet.entities.Tweet;
 import br.com.giovanni.springsecurity.tweet.repositories.TweetRepository;
 import br.com.giovanni.springsecurity.tweet.repositories.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -36,6 +36,20 @@ public class TweetController {
 
         tweetRepository.save(tweet);
 
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/tweets/{id}")
+    public ResponseEntity<Void> deleteTweet(@PathVariable("id") Long tweetId,
+                                                                JwtAuthenticationToken token){
+        var tweet = tweetRepository.findById(tweetId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if(tweet.getUser().getUserId().equals(UUID.fromString(token.getName()))){ //compara os user id do tweet com o que esta pedindo a deleção
+            tweetRepository.deleteById(tweetId);
+        }else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         return ResponseEntity.ok().build();
     }
 }
