@@ -33,7 +33,7 @@ public class SecurityConfig {
     private RSAPrivateKey  privateKey;
 
     @Bean
-    private SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable()) //fazer somente em devl pra ficar mais facil testar e nunca em prod
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
