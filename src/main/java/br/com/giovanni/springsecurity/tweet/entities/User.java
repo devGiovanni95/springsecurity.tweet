@@ -1,6 +1,8 @@
 package br.com.giovanni.springsecurity.tweet.entities;
 
+import br.com.giovanni.springsecurity.tweet.controller.dto.LoginRequest;
 import jakarta.persistence.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
 import java.util.UUID;
@@ -57,5 +59,10 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    //comparando se as crendenciais sao iguais
+    public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(loginRequest.password(), this.password);//compara a senha passada com a senha do db
     }
 }
