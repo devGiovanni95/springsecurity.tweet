@@ -36,8 +36,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/login").permitAll() //liberando a rota de loginus
-
+                        .requestMatchers(HttpMethod.POST, "/login").permitAll() //liberando a rota de login
+                        .requestMatchers(HttpMethod.POST, "/users").permitAll() //liberando a rota de criar user
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable()) //fazer somente em devl pra ficar mais facil testar e nunca em prod
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
